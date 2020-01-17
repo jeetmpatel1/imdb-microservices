@@ -10,6 +10,7 @@
     import com.imdb.models.UserRating;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.ComponentScan;
+    import org.springframework.web.bind.annotation.GetMapping;
     import org.springframework.web.bind.annotation.PathVariable;
     import org.springframework.web.bind.annotation.RequestMapping;
     import org.springframework.web.bind.annotation.RestController;
@@ -20,12 +21,17 @@
     import java.util.stream.Collectors;
 
     @RestController
-    @RequestMapping("/catalog")
+    @RequestMapping("/movie-catalog")
     public class MovieCatalogResource {
         @Autowired
         private RestTemplate restTemplate;
 
-        @RequestMapping("/{userId}")
+        @GetMapping("/status")
+        public String getStatus(){
+            return "{\"status\":\"running\"}";
+        }
+
+        @GetMapping("/{userId}")
         public List<CatalogItem> getCatalog(@PathVariable("userId") String  userId) {
 
             UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/"+userId, UserRating.class);

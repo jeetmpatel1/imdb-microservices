@@ -1,14 +1,22 @@
 package com.imdb.movieinfoservice.resources;
 
 import com.imdb.movieinfoservice.models.Movie;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/movie-info")
 public class MovieResource {
-    @RequestMapping("/{movieId}")
+
+    @GetMapping("/status")
+    public String getStatus(){
+        return "{\"status\":\"running\"}";
+    }
+
+
+    @GetMapping("/{movieId}")
     public Movie getMovieInfo(@PathVariable("movieId") String movieId){
         int id;
         try{
