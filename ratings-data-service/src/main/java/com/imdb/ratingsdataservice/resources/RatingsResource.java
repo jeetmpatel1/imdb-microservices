@@ -25,7 +25,7 @@
             return new Rating(movieId,4);
         }
 
-        @GetMapping("users/{userId}")
+        @GetMapping("/users/{userId}")
         public UserRating getUserRating(@PathVariable("userId") String userId){
             List<Rating> ratings = Arrays.asList(
                     new Rating("1",4),

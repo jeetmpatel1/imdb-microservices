@@ -31,13 +31,13 @@
             return "{\"status\":\"running\"}";
         }
 
-        @GetMapping("/{userId}")
+        @GetMapping("/users/{userId}")
         public List<CatalogItem> getCatalog(@PathVariable("userId") String  userId) {
 
-            UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/"+userId, UserRating.class);
+            UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratings-data/users/"+userId, UserRating.class);
 
             return ratings.getUserRating().stream().map(rating -> {
-                Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId() ,Movie.class);
+                Movie movie = restTemplate.getForObject("http://movie-info-service/movie-info/movie/" + rating.getMovieId() ,Movie.class);
                 return new CatalogItem(movie.getName(), "Test", rating.getRating());
 
             }).collect(Collectors.toList());
