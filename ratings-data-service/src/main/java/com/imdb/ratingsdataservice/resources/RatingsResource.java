@@ -3,6 +3,7 @@
 
     import com.imdb.ratingsdataservice.models.Rating;
     import com.imdb.ratingsdataservice.models.UserRating;
+    import io.swagger.annotations.ApiOperation;
     import org.springframework.web.bind.annotation.GetMapping;
     import org.springframework.web.bind.annotation.PathVariable;
     import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,17 @@
         }
 
         @GetMapping("/{movieId}")
+        @ApiOperation(value = "Find the over all average rating of movie",
+        notes = "Provide the movie Id to get the average rating of all users for that particular movie",
+        response=Rating.class)
         public Rating getRating(@PathVariable("movieId") String movieId){
             return new Rating(movieId,4);
         }
 
         @GetMapping("/users/{userId}")
+        @ApiOperation(value = "Find the all the movies watched and rated by particular user.",
+                notes = "Provide the user Id to get the Name and Rating of the movie by particular user",
+                response=UserRating.class)
         public UserRating getUserRating(@PathVariable("userId") String userId){
             List<Rating> ratings = Arrays.asList(
                     new Rating("1",4),
