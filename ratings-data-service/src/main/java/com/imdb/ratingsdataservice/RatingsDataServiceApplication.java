@@ -1,5 +1,7 @@
 package com.imdb.ratingsdataservice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
@@ -17,8 +19,13 @@ import java.util.Collections;
 @EnableSwagger2
 public class RatingsDataServiceApplication {
 
+    static Logger logger = LoggerFactory.getLogger(RatingsDataServiceApplication.class);
+
     public static void main(String[] args) {
+        logger.trace("Entered within ratings-data-service");
         SpringApplication.run(RatingsDataServiceApplication.class, args);
+        logger.trace("Exited within ratings-data-service");
+
     }
 
     @Bean

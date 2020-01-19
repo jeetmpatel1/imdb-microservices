@@ -4,6 +4,8 @@
     import com.imdb.ratingsdataservice.models.Rating;
     import com.imdb.ratingsdataservice.models.UserRating;
     import io.swagger.annotations.ApiOperation;
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
     import org.springframework.web.bind.annotation.GetMapping;
     import org.springframework.web.bind.annotation.PathVariable;
     import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +18,11 @@
     @RequestMapping("/ratings-data")
     public class RatingsResource {
 
+        static Logger logger = LoggerFactory.getLogger(RatingsResource.class);
+
         @GetMapping("/status")
         public String getStatus(){
+            logger.trace("checked status");
             return "{\"status\":\"running\"}";
         }
 
@@ -26,7 +31,10 @@
         notes = "Provide the movie Id to get the average rating of all users for that particular movie",
         response=Rating.class)
         public Rating getRating(@PathVariable("movieId") String movieId){
+            logger.trace("Entered into getRating method");
+            logger.trace("Exited into getRating method");
             return new Rating(movieId,4);
+
         }
 
         @GetMapping("/users/{userId}")
@@ -34,6 +42,7 @@
                 notes = "Provide the user Id to get the Name and Rating of the movie by particular user",
                 response=UserRating.class)
         public UserRating getUserRating(@PathVariable("userId") String userId){
+            logger.trace("Entered into getUserRating method");
             List<Rating> ratings = Arrays.asList(
                     new Rating("1",4),
                     new Rating("2",3),
@@ -41,6 +50,7 @@
             );
             UserRating userRating = new UserRating();
             userRating.setUserRating(ratings);
+            logger.trace("Exited into getUserRating method");
             return userRating;
         }
 
