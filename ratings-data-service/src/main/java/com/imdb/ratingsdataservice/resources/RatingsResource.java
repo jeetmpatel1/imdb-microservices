@@ -44,9 +44,9 @@
         public UserRating getUserRating(@PathVariable("userId") String userId){
             logger.trace("Entered into getUserRating method");
             List<Rating> ratings = Arrays.asList(
-                    new Rating("1",4),
-                    new Rating("2",3),
-                    new Rating("3",5)
+                    new Rating("100",4),
+                    new Rating("200",3),
+                    new Rating("300",5)
             );
             UserRating userRating = new UserRating();
             userRating.setUserRating(ratings);
