@@ -1,35 +1,41 @@
-package com.imdb.movieinfoservice.resources;
+            package com.imdb.movieinfoservice.resources;
 
-import com.imdb.movieinfoservice.models.Movie;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+            import com.imdb.movieinfoservice.models.Movie;
+            import com.imdb.movieinfoservice.models.MovieSummary;
+            import org.springframework.beans.factory.annotation.Autowired;
+            import org.springframework.beans.factory.annotation.Value;
+            import org.springframework.web.bind.annotation.GetMapping;
+            import org.springframework.web.bind.annotation.PathVariable;
+            import org.springframework.web.bind.annotation.RequestMapping;
+            import org.springframework.web.bind.annotation.RestController;
+            import org.springframework.web.client.RestTemplate;
 
-@RestController
-@RequestMapping("/movie-info")
-public class MovieResource {
+            @RestController
+            @RequestMapping("/movie-info")
+            public class MovieResource {
 
-    @GetMapping("/status")
-    public String getStatus(){
-        return "{\"status\":\"running\"}";
-    }
+                @Value("${api.key}")
+                private String apiKey;
+
+                @Autowired
+                private RestTemplate restTemplate;
+
+                @GetMapping("/status")
+                public String getStatus() {
+                    return "{\"status\":\"running\"}";
+                }
 
 
-    @GetMapping("/movie/{movieId}")
-    public Movie getMovieInfo(@PathVariable("movieId") String movieId){
-        int id;
-        try{
-            id = Integer.parseInt(movieId);
-        }catch(NumberFormatException e){
-            return new Movie("-1","Default Movie");
-        }
-        if(id == 1)
-            return new Movie("1","Kevi Rite Jaish");
-        if(id == 2)
-            return new Movie("2","Bey yaar!");
-        if(id == 3)
-            return new Movie("3","Taare Zameen Par");
-        return new Movie("-1","Default Movie");
-    }
-}
+                @GetMapping("/movie/{movieId}")
+                public Movie getMovieInfo(@PathVariable("movieId") String movieId) {
+                    System.out.println("Came here with : "  + movieId);
+                    //MovieSummary movieSummary = restTemplate.getForObject(
+                    //      "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey,
+                    //       MovieSummary.class);
+                    MovieSummary movieSummary = restTemplate.getForObject(
+                            "http://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey,
+                            MovieSummary.class);
+
+                   return new Movie(movieId,movieSummary.getTitle(),movieSummary.getOverview());
+                }
+            }
