@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="movie-catalog-service" target="13" />
+      <module name="movie-catalog-service" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

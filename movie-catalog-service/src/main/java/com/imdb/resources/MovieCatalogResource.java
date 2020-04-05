@@ -8,6 +8,7 @@
     import com.imdb.models.Movie;
     import com.imdb.models.Rating;
     import com.imdb.models.UserRating;
+    import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.ComponentScan;
     import org.springframework.web.bind.annotation.GetMapping;
@@ -31,16 +32,21 @@
             return "{\"status\":\"running\"}";
         }
 
+        @HystrixCommand(fallbackMethod = "getFallBackCatalog")
         @GetMapping("/users/{userId}")
-        public List<CatalogItem> getCatalog(@PathVariable("userId") String  userId) {
+        public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
-            UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratings-data/users/"+userId, UserRating.class);
+            UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratings-data/users/" + userId, UserRating.class);
 
             return ratings.getUserRating().stream().map(rating -> {
-                Movie movie = restTemplate.getForObject("http://movie-info-service/movie-info/movie/" + rating.getMovieId() ,Movie.class);
+                Movie movie = restTemplate.getForObject("http://movie-info-service/movie-info/movie/" + rating.getMovieId(), Movie.class);
                 return new CatalogItem(movie.getName(), "Test", rating.getRating());
 
             }).collect(Collectors.toList());
+        }
+
+        public List<CatalogItem> getFallBackCatalog(@PathVariable("userId") String userId) {
+            return Arrays.asList(new CatalogItem("No Movie", "", 0));
         }
 
     }
