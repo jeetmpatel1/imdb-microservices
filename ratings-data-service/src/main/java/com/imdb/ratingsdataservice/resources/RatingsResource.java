@@ -49,7 +49,8 @@
                     new Rating("300",5)
             );
             UserRating userRating = new UserRating();
-            userRating.setUserRating(ratings);
+            userRating.setUserId(userId);
+            userRating.setRatings(ratings);
             logger.trace("Exited into getUserRating method");
             return userRating;
         }
