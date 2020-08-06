@@ -10,12 +10,20 @@
 	</parent>
 	<groupId>com.imdb</groupId>
 	<artifactId>movie-catalog-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>movie-catalog-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Movie Catalog service for IMDB Microservice application</description>
 
 	<properties>
 		<java.version>1.8</java.version>
+
+		<project.deployment.folder.name>${name}</project.deployment.folder.name>
+		<project.deployment.folder.dependeciesfolder.name>supported-libs</project.deployment.folder.dependeciesfolder.name>
+		<project.deployment.folder.resourcesfolder.name>config</project.deployment.folder.resourcesfolder.name>
+		<project.deployment.mainclass>com.imdb.MovieCatalogServiceApplication</project.deployment.mainclass>
+
+		<project.resources.build.folder>${project.build.directory}/${project.deployment.folder.name}/${project.deployment.folder.resourcesfolder.name}/</project.resources.build.folder>
+		<project.dependencies.build.folder>${project.build.directory}/${project.deployment.folder.name}/${project.deployment.folder.dependeciesfolder.name}/</project.dependencies.build.folder>
 	</properties>
 
 	<dependencies>
@@ -64,8 +72,78 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/${project.deployment.folder.name}</outputDirectory>
+					<excludes>
+						<exclude>**/*.properties</exclude>
+						<exclude>**/*.txt</exclude>
+					</excludes>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>${project.deployment.folder.dependeciesfolder.name}/</classpathPrefix>
+							<mainClass>${project.deployment.mainclass}</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>${project.deployment.folder.resourcesfolder.name}/</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.dependencies.build.folder}</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.resources.build.folder}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<includes>
+										<include>**/*.properties</include>
+										<include>**/*.txt</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
