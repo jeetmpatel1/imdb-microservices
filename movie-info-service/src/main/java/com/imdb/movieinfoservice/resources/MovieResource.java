@@ -14,8 +14,11 @@
             @RequestMapping("/movie-info")
             public class MovieResource {
 
-                @Value("${api.key}")
+                @Value("${moviedb.api.key}")
                 private String apiKey;
+
+                @Value("${moviedb.api.url}")
+                private String apiBaseUrl;
 
                 @Autowired
                 private RestTemplate restTemplate;
@@ -33,7 +36,7 @@
                     //      "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey,
                     //       MovieSummary.class);
                     MovieSummary movieSummary = restTemplate.getForObject(
-                            "http://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey,
+                            apiBaseUrl + movieId + "?api_key=" + apiKey,
                             MovieSummary.class);
 
                    return new Movie(movieId,movieSummary.getTitle(),movieSummary.getOverview());
